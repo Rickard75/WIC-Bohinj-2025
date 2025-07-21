@@ -1,0 +1,10 @@
+# Evita di pushare le credenziali
+credenziali.json
+*.json
+
+# File temporanei o cache
+__pycache__/
+*.pyc
+
+# Ambiente virtuale
+wic_env/
