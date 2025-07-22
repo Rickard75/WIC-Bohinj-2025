@@ -12,7 +12,7 @@ def get_gsheet_client():
     credentials_dict = st.secrets["gcp_service_account"]
     credentials_json = json.dumps(credentials_dict)
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-    credentials = ServiceAccountCredentials.from_json_keyfile_dict(json.loads(credentials_json), scope)
+    credentials = Credentials.from_json_keyfile_dict(json.loads(credentials_json), scope)
     return gspread.authorize(credentials)
 
 def save_vote_to_gsheet(voter, votes):
