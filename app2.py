@@ -22,7 +22,7 @@ def save_vote_to_gsheet(voter, votes):
     service_account_path = os.path.join(script_dir, 'service_account.json')
     
     with open(service_account_path) as f:
-        credentials_json = json.load(f)
+        credentials_json = st.secrets["gsheets"]
     
     # Configurazione delle credenziali con gli scope necessari
     scopes = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
