@@ -4,7 +4,7 @@ import pandas as pd
 import gspread
 import json
 from datetime import datetime
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2.service_account import Credentials
 
 # === SETUP GOOGLE SHEETS ===
 
