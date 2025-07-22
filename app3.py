@@ -10,21 +10,13 @@ from google.oauth2.service_account import Credentials
 
 def get_gsheet_client():
     try:
-        # Controlla se st.secrets esiste e contiene la chiave
-        if hasattr(st, "secrets") and "gcp_service_account" in getattr(st, "secrets", {}):
-            credentials_dict = st.secrets["gcp_service_account"]
-            credentials_json = json.dumps(credentials_dict)
-            scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-            credentials = Credentials.from_json_keyfile_dict(json.loads(credentials_json), scope)
-            return gspread.authorize(credentials)
-        else:
-            # Usa il file service_account.json
-            scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-            credentials = Credentials.from_service_account_file('service_account.json', scopes=scope)
-            return gspread.authorize(credentials)
+        scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+        credentials = Credentials.from_service_account_file('service_account.json', scopes=scope)
+        return gspread.authorize(credentials)
     except Exception as e:
         st.error(f"Errore nell'autenticazione: {e}")
         return None
+
 
 def save_vote_to_gsheet(voter, votes_with_scores):
     try:
