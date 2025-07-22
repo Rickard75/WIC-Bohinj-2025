@@ -23,18 +23,21 @@ def save_vote_to_gsheet(voter, votes_with_scores):
         gc = get_gsheet_client()
         if not gc:
             return False, "Errore di autenticazione con Google"
-            
+
         sheet = gc.open("Voti Ideone Bohinj 2025").worksheet("Risposte")
 
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        
+
         # Preparare la riga da inserire nel foglio: [timestamp, votante, idea1, punteggio1, idea2, punteggio2, idea3, punteggio3]
         row = [timestamp, voter]
         for vote in votes_with_scores:
             row.append(vote["idea"])
             row.append(vote["punteggio"])
-        
-        sheet.append_row(row, value_input_option="USER_ENTERED")
+
+        result = sheet.append_row(row, value_input_option="USER_ENTERED")
+        # Se il risultato è un oggetto Response, solleva errore esplicito
+        if hasattr(result, 'status_code'):
+            raise Exception(f"Errore API Google Sheets: {result}")
         return True, ""
     except Exception as e:
         return False, str(e)
