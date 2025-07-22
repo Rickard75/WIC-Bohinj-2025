@@ -51,7 +51,7 @@ Scegli **3 idee diverse** e assegna **3, 2, 1 punti**.
 df = load_ideas()
 
 # Seleziona votante
-votanti = ["Rick", "Cappio", "Coach", "Fra", "Bruce", "Andre", "Giada", "Lanny"]
+votanti = ["Rick", "Cappio", "Coach", "Fra", "Bruce", "Andre", "Giada", "Lanny "]
 voter = st.selectbox("Chi sei?", votanti)
 
 if voter:
