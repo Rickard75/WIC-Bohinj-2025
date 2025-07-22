@@ -7,7 +7,7 @@ from datetime import datetime
 # === CONFIGURAZIONE GOOGLE SHEETS ===
 # Path al file di credenziali JSON (deve essere nella stessa directory o specificato correttamente)
 GSHEET_CREDENTIALS_PATH = "service_account.json"  # Cambia con il tuo nome file se diverso
-GSHEET_NAME = "WIC_Voti_Bohinj_2025"  # Nome del tuo foglio Google
+GSHEET_NAME = "WIC Voti Bohinj 2025"  # Nome del tuo foglio Google
 
 # === FUNZIONE PER CONNETTERSI A GOOGLE SHEETS ===
 @st.cache_resource
