@@ -34,7 +34,7 @@ def save_vote_to_gsheet(voter, votes_with_scores):
             row.append(vote["idea"])
             row.append(vote["punteggio"])
         
-        sheet.append_row(row)
+        sheet.append_row(row, value_input_option="USER_ENTERED")
         return True, ""
     except Exception as e:
         return False, str(e)
