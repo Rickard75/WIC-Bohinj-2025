@@ -51,7 +51,8 @@ Scegli **3 idee diverse** e assegna **3, 2, 1 punti**.
 df = load_ideas()
 
 # Seleziona votante
-voter = st.text_input("Il tuo nome (deve combaciare con gli autori)")
+votanti = ["Rick", "Cappio", "Coach", "Fra", "Bruce", "Andre", "Giada", "Lanny"]
+voter = st.selectbox("Chi sei?", votanti)
 
 if voter:
     # Filtra idee che NON sono dell'utente
