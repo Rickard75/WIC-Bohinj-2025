@@ -27,7 +27,7 @@ def save_vote_to_gsheet(voter, votes):
 
 @st.cache_data
 def load_ideas():
-    df = pd.read_csv("idee.csv")
+    df = pd.read_csv("wic_ideas.csv")
     df["Autori"] = df["Autori"].apply(lambda x: [a.strip() for a in x.split(",")])
     return df
 
