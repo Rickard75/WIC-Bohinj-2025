@@ -7,14 +7,14 @@ from datetime import datetime
 # === CONFIGURAZIONE GOOGLE SHEETS ===
 # Path al file di credenziali JSON (deve essere nella stessa directory o specificato correttamente)
 GSHEET_CREDENTIALS_PATH = "service_account.json"  # Cambia con il tuo nome file se diverso
-GSHEET_NAME = "WIC Voti Bohinj 2025"  # Nome del tuo foglio Google
+GSHEET_NAME = "Voti WIC Bohinj 2025"  # Nome del tuo foglio Google
 
 # === FUNZIONE PER CONNETTERSI A GOOGLE SHEETS ===
 @st.cache_resource
 def get_gsheet_client():
     creds = Credentials.from_service_account_file(
         GSHEET_CREDENTIALS_PATH,
-        scopes=["https://www.googleapis.com/auth/spreadsheets"]
+        scopes=["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
     )
     return gspread.authorize(creds)
 
@@ -24,6 +24,7 @@ def save_vote_to_gsheet(username, voto1, voto2, voto3):
     sheet = client.open(GSHEET_NAME).sheet1
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     row = [now, username, voto1, voto2, voto3]
+    st.write("Autenticazione riuscita! Accesso al foglio ottenuto.")
     sheet.append_row(row)
 
 # === CARICA IL FILE CON LE IDEE ===
