@@ -11,12 +11,20 @@ GSHEET_NAME = "Voti WIC Bohinj 2025"  # Nome del tuo foglio Google
 
 # === FUNZIONE PER CONNETTERSI A GOOGLE SHEETS ===
 @st.cache_resource
-def get_gsheet_client():
+#def get_gsheet_client():
+#    creds = Credentials.from_service_account_file(
+#        GSHEET_CREDENTIALS_PATH,
+#        scopes=["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
+#    )
+#    return gspread.authorize(creds)
+
+def get_gsheet_client2():
     creds = Credentials.from_service_account_file(
-        GSHEET_CREDENTIALS_PATH,
+        st.secrets["google_service_account"],
         scopes=["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
     )
     return gspread.authorize(creds)
+
 
 # === FUNZIONE PER SALVARE I VOTI NEL FOGLIO ===
 def save_vote_to_gsheet(username, voto1, voto2, voto3, df):
