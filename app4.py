@@ -19,13 +19,30 @@ def get_gsheet_client():
     return gspread.authorize(creds)
 
 # === FUNZIONE PER SALVARE I VOTI NEL FOGLIO ===
-def save_vote_to_gsheet(username, voto1, voto2, voto3):
-    client = get_gsheet_client()
-    sheet = client.open(GSHEET_NAME).sheet1
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    row = [now, username, voto1, voto2, voto3]
-    st.write("Autenticazione riuscita! Accesso al foglio ottenuto.")
-    sheet.append_row(row)
+def save_vote_to_gsheet(username, voto1, voto2, voto3, df):
+    try:
+        client = get_gsheet_client()
+        sheet = client.open(GSHEET_NAME).sheet1
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        # Crea le righe da scrivere: ogni riga è (timestamp, utente, idea, autori, punteggio)
+        def get_autori(idea_text):
+            autori = df[df["Idea"] == idea_text]["Autori"].values
+            return ", ".join(autori[0]) if autori.size > 0 else "Sconosciuto"
+
+        rows = [
+            [now, username, voto1, get_autori(voto1), 3],
+            [now, username, voto2, get_autori(voto2), 2],
+            [now, username, voto3, get_autori(voto3), 1]
+        ]
+
+        # Scrive tutte le righe in una volta
+        for row in rows:
+            sheet.append_row(row)
+
+        st.success("✅ Voto registrato con successo!")
+    except Exception as e:
+        st.error(f"❌ Errore durante il salvataggio: {e}")
 
 # === CARICA IL FILE CON LE IDEE ===
 @st.cache_data
@@ -69,7 +86,7 @@ def main():
             st.error("Devi scegliere 3 idee diverse.")
         else:
             try:
-                save_vote_to_gsheet(username, voto1, voto2, voto3)
+                save_vote_to_gsheet(username, voto1, voto2, voto3, df)
                 st.success("Voto registrato con successo!")
             except Exception as e:
                 st.error(f"Errore durante il salvataggio: {e}")
