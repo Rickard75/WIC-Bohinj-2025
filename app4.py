@@ -75,7 +75,9 @@ def main():
     st.title("💩 Idee di Merda – Bohinj Lake 2025")
     st.markdown("""
     Dober dan in dobrodošli na prvem natečaju za ideje iz sranja, izdaja Bohinjsko jezero 2025.
+    
     Benvenuti al primo concorso di idee di 💩, edizione Lago di Bohinj 2025.
+    
     Vota le idee più divertenti, folli, assurde.  
     **Attenzione: non puoi votare le tue!**  
     Attribuzione punteggi:
