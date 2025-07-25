@@ -31,9 +31,9 @@ def get_gsheet_client():
         )
     except Exception as e:
         # Se fallisce (es. in locale), usa il file JSON
-        with open("service_account.json") as f:
+        with open("service_account.json") as source:
             creds = Credentials.from_service_account_file(
-                f,
+                "service_account.json",
                 scopes=[
                     "https://www.googleapis.com/auth/spreadsheets",
                     "https://www.googleapis.com/auth/drive"
