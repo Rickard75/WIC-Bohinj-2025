@@ -18,12 +18,29 @@ GSHEET_NAME = "Voti WIC Bohinj 2025"  # Nome del tuo foglio Google
 #    )
 #    return gspread.authorize(creds)
 
-def get_gsheet_client2():
-    creds = Credentials.from_service_account_info(
-        st.secrets["google_service_account"],
-        scopes=["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
-    )
+def get_gsheet_client():
+    try:
+        # Prova a usare le credenziali da st.secrets (deployment remoto)
+        creds_info = st.secrets["google_service_account"]
+        creds = Credentials.from_service_account_info(
+            creds_info,
+            scopes=[
+                "https://www.googleapis.com/auth/spreadsheets",
+                "https://www.googleapis.com/auth/drive"
+            ]
+        )
+    except Exception as e:
+        # Se fallisce (es. in locale), usa il file JSON
+        with open("service_account.json") as f:
+            creds = Credentials.from_service_account_file(
+                f,
+                scopes=[
+                    "https://www.googleapis.com/auth/spreadsheets",
+                    "https://www.googleapis.com/auth/drive"
+                ]
+            )
     return gspread.authorize(creds)
+
 
 
 # === FUNZIONE PER SALVARE I VOTI NEL FOGLIO ===
