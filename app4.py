@@ -19,7 +19,7 @@ GSHEET_NAME = "Voti WIC Bohinj 2025"  # Nome del tuo foglio Google
 #    return gspread.authorize(creds)
 
 def get_gsheet_client2():
-    creds = Credentials.from_service_account_file(
+    creds = Credentials.from_service_account_info(
         st.secrets["google_service_account"],
         scopes=["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
     )
