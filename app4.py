@@ -4,23 +4,16 @@ import gspread
 from google.oauth2.service_account import Credentials
 from datetime import datetime
 
-# === CONFIGURAZIONE GOOGLE SHEETS ===
-# Path al file di credenziali JSON (deve essere nella stessa directory o specificato correttamente)
-GSHEET_CREDENTIALS_PATH = "service_account.json"  # Cambia con il tuo nome file se diverso
-GSHEET_NAME = "Voti WIC Bohinj 2025"  # Nome del tuo foglio Google
+# === GOOGLE SHEETS CONFIGURATION===
+GSHEET_CREDENTIALS_PATH = "service_account.json" # json filename with credentials
+GSHEET_NAME = "Voti WIC Bohinj 2025"  # Google sheet filename
 
-# === FUNZIONE PER CONNETTERSI A GOOGLE SHEETS ===
-@st.cache_resource
-#def get_gsheet_client():
-#    creds = Credentials.from_service_account_file(
-#        GSHEET_CREDENTIALS_PATH,
-#        scopes=["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
-#    )
-#    return gspread.authorize(creds)
+# === CONNECTION TO GOOGLE SHEETS ===
+@st.cache_resource # connection to gsheet avoiding reloading
 
 def get_gsheet_client():
     try:
-        # Prova a usare le credenziali da st.secrets (deployment remoto)
+        # Remote connection using Streamlit secrets
         creds_info = st.secrets["google_service_account"]
         creds = Credentials.from_service_account_info(
             creds_info,
@@ -30,7 +23,7 @@ def get_gsheet_client():
             ]
         )
     except Exception as e:
-        # Se fallisce (es. in locale), usa il file JSON
+        # Local connection using a service account file
         with open("service_account.json") as source:
             creds = Credentials.from_service_account_file(
                 "service_account.json",
@@ -43,14 +36,14 @@ def get_gsheet_client():
 
 
 
-# === FUNZIONE PER SALVARE I VOTI NEL FOGLIO ===
+# === SAVE DATA TO GSHEET ===
 def save_vote_to_gsheet(username, voto1, voto2, voto3, df):
     try:
         client = get_gsheet_client()
         sheet = client.open(GSHEET_NAME).sheet1
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        # Crea le righe da scrivere: ogni riga è (timestamp, utente, idea, autori, punteggio)
+        # Create rows: format (timestamp, user, idea, authors, points)
         def get_autori(idea_text):
             autori = df[df["Idea"] == idea_text]["Autori"].values
             return ", ".join(autori[0]) if autori.size > 0 else "Sconosciuto"
@@ -61,7 +54,7 @@ def save_vote_to_gsheet(username, voto1, voto2, voto3, df):
             [now, username, voto3, get_autori(voto3), 1]
         ]
 
-        # Scrive tutte le righe in una volta
+        # Write rows all in one
         for row in rows:
             sheet.append_row(row)
 
@@ -69,7 +62,7 @@ def save_vote_to_gsheet(username, voto1, voto2, voto3, df):
     except Exception as e:
         st.error(f"❌ Errore durante il salvataggio: {e}")
 
-# === CARICA IL FILE CON LE IDEE ===
+# === LOAD IDEAS CSV FILE ===
 @st.cache_data
 def load_ideas(filepath="wic_ideas.csv"):
     df = pd.read_csv(filepath, header=None, names=["ID", "Idea", "Autori"])
@@ -77,13 +70,20 @@ def load_ideas(filepath="wic_ideas.csv"):
     df["Autori"] = df["Autori"].apply(lambda x: [a.strip() for a in x.split(",")])
     return df
 
-# === INTERFACCIA DELL'APP ===
+# === APP INTERFACE ===
 def main():
-    st.title("💩 Idee di Merda – Bohinj 2025")
+    st.title("💩 Idee di Merda – Bohinj Lake 2025")
     st.markdown("""
+    Dober dan in dobrodošli na prvem natečaju za ideje iz sranja, izdaja Bohinjsko jezero 2025.
+    Benvenuti al primo concorso di idee di 💩, edizione Lago di Bohinj 2025.
     Vota le idee più divertenti, folli, assurde.  
-    **Non puoi votare le tue.**  
-    Dai 3 punti alla più "bella", 2 alla seconda, 1 alla terza.
+    **Attenzione: non puoi votare le tue!**  
+    Attribuzione punteggi:
+    - 🥇 3 punti alla golden idea
+    - 🥈 2 punti alla silver idea
+    - 🥉 1 punto alla bronze idea
+    - 🪐 Premio "Merda universale" all'idea che verrà votata da più persone
+    - 💐 Premio "Merda elegante" all'idea scelta il minore numero di volte
     """)
 
     df = load_ideas()
