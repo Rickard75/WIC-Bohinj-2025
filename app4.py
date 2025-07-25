@@ -46,7 +46,7 @@ def get_gsheet_client():
 # === FUNZIONE PER SALVARE I VOTI NEL FOGLIO ===
 def save_vote_to_gsheet(username, voto1, voto2, voto3, df):
     try:
-        client = get_gsheet_client2()
+        client = get_gsheet_client()
         sheet = client.open(GSHEET_NAME).sheet1
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
